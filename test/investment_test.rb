@@ -127,17 +127,16 @@ class InvestmentTest < Test::Unit::TestCase
   def test_limited_number_of_regular_payments
     investment = Investment.new
 
-    investment.regular(1_000, Frequency::MONTHLY, 12)
-    assert_equal 12_000, investment.returns(2)
+    investment.regular(1_000, Frequency::MONTHLY, 6)
+    assert_equal 6_000, investment.more_accurate_returns(2)
 
     investment.rate(5)
     investment.regular(1_000, Frequency::MONTHLY, 12)
-    assert_equal 12_946.52, investment.returns(2)
+    assert_equal 12_941.25, investment.more_accurate_returns(2)
 
     investment.rate(5)
     investment.regular(5_000, Frequency::YEARLY, 5)
-
-    assert_equal 37_024.37, investment.returns(10)
+    assert_equal 37_024.37, investment.more_accurate_returns(10)
     assert_equal 25_000, investment.invested(10)
   end
 end

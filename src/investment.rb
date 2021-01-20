@@ -36,10 +36,10 @@ class Investment
   end
 
   def more_accurate_returns(years = 1)
-    years.times.reduce(initial) do |sum, value|
-      add_interest(sum, @rate) + @regular.frequency.times.reduce(0) do |sum, value|
-        total_after_regular_payment(sum)
-      end
+    (1..years).reduce(initial) do |starting, year|
+      add_interest(starting, @rate) + @regular.payments_for_year(year).map do |i|
+        add_interest(@regular.amount, @rate / @regular.frequency * (i + 1))
+      end.sum
     end.round(2)
   end
 
