@@ -90,11 +90,11 @@ class InvestmentTest < Test::Unit::TestCase
     investment.rate(8)
     investment.regular(700)
 
-    assert_equal 12.25, investment.time_to_reach(200_000)
-    assert_equal 191_497.24, investment.returns(12)
+    assert_equal 13, investment.time_to_reach(200_000)
+    assert_equal 215_581.02, investment.returns(13)
 
-    assert_in_delta 20.8, investment.time_to_reach(500_000), 0.1
-    assert_equal 447_667.43, investment.returns(20)
+    assert_equal 22, investment.time_to_reach(500_000)
+    assert_equal 540_388.41, investment.returns(22)
   end
 
   def test_returns_per_year

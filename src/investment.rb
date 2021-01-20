@@ -33,8 +33,11 @@ class Investment
     years = 1
 
     loop do
-      running_total = total_after_regular_payment(running_total)
-      return years.to_f / @regular.frequency if running_total >= total
+      running_total = add_interest(running_total, @rate) + @regular.payments_for_year(years).map do |i|
+        add_interest(@regular.amount, @rate / @regular.frequency * (i + 1))
+      end.sum
+
+      return years if running_total >= total
       years += 1
     end
   end
@@ -50,11 +53,6 @@ class Investment
   end
 
   private
-
-  # @deprecated
-  def total_after_regular_payment(total)
-    add_interest(total + @regular.amount, @rate / @regular.frequency)
-  end
 
   def add_interest(amount, rate)
     amount * (1 + rate / 100)
