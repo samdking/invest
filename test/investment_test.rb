@@ -97,6 +97,14 @@ class InvestmentTest < Test::Unit::TestCase
     assert_equal 540_388.41, investment.returns(22)
   end
 
+  def test_raises_error_when_growth_is_nil
+    investment = Investment.new
+
+    assert_raise InfiniteError do
+      investment.time_to_reach(100)
+    end
+  end
+
   def test_returns_per_year
     investment = Investment.new(3_000)
 

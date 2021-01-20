@@ -1,5 +1,7 @@
 require_relative "./frequency"
 
+class InfiniteError < StandardError; end
+
 class Investment
   attr_reader :initial, :rate
 
@@ -30,6 +32,8 @@ class Investment
 
     return 0 if running_total >= total
 
+    raise InfiniteError if no_growth_possible?
+
     years = 1
 
     loop do
@@ -56,5 +60,9 @@ class Investment
 
   def add_interest(amount, rate)
     amount * (1 + rate / 100)
+  end
+
+  def no_growth_possible?
+    @regular.amount.zero? && (@rate <= 0 || initial <= 0)
   end
 end
