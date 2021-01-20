@@ -16,7 +16,9 @@ class Frequency
   def yearly?; @frequency == YEARLY; end
 
   def total(years)
-    yearly_total * (@limit ? [years, years_limit].min : years)
+    time = years * @frequency
+
+    (@limit ? [time, @limit].min : time) * @amount
   end
 
   def yearly_total

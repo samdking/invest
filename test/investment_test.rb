@@ -74,13 +74,14 @@ class InvestmentTest < Test::Unit::TestCase
 
   def test_invested
     investment = Investment.new(10_000)
-
     assert_equal 10_000, investment.invested
     assert_equal 10_000, investment.invested(5)
 
     investment.regular(10_000, Frequency::YEARLY)
-
     assert_equal 50_000, investment.invested(4)
+
+    investment.regular(1_000)
+    assert_equal 34_000, investment.invested(2)
   end
 
   def test_time_to_reach_total
@@ -133,10 +134,18 @@ class InvestmentTest < Test::Unit::TestCase
     investment.rate(5)
     investment.regular(1_000, Frequency::MONTHLY, 12)
     assert_equal 12_941.25, investment.more_accurate_returns(2)
+  end
+
+  def test_invested_with_limited_regular_payments
+    investment = Investment.new
 
     investment.rate(5)
     investment.regular(5_000, Frequency::YEARLY, 5)
+
     assert_equal 37_024.37, investment.more_accurate_returns(10)
     assert_equal 25_000, investment.invested(10)
+
+    investment.regular(1_000, Frequency::MONTHLY, 6)
+    assert_equal 6_000, investment.invested
   end
 end
