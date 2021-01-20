@@ -25,19 +25,9 @@ class Frequency
     @amount * @frequency
   end
 
-  def within_limit?(iteration)
-    @limit.nil? || iteration < years_limit
-  end
-
   def payments_for_year(year)
     return @frequency.times if @limit.nil?
 
     [@limit - (year-1) * frequency, frequency].min.times
-  end
-
-  private
-
-  def years_limit
-    @limit / @frequency
   end
 end

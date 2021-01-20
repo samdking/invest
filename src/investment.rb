@@ -13,29 +13,7 @@ class Investment
     @regular = Frequency.new(amount, frequency, limit)
   end
 
-  # def returns(years = 1)
-  #   (years * @regular.frequency).times.reduce(initial) do |sum, iteration|
-  #     if @regular.within_limit?(iteration)
-  #       total_after_regular_payment(sum)
-  #     else
-  #       add_interest(sum, @rate / @regular.frequency)
-  #     end
-  #   end.round(2)
-  # end
-
   def returns(years = 1)
-    years.times.reduce(initial) do |sum, iteration|
-      if @regular.within_limit?(iteration)
-        @regular.frequency.times.reduce(sum) do |sum, value|
-          total_after_regular_payment(sum)
-        end
-      else
-        add_interest(sum, @rate)
-      end
-    end.round(2)
-  end
-
-  def more_accurate_returns(years = 1)
     (1..years).reduce(initial) do |starting, year|
       add_interest(starting, @rate) + @regular.payments_for_year(year).map do |i|
         add_interest(@regular.amount, @rate / @regular.frequency * (i + 1))
@@ -73,6 +51,7 @@ class Investment
 
   private
 
+  # @deprecated
   def total_after_regular_payment(total)
     add_interest(total + @regular.amount, @rate / @regular.frequency)
   end

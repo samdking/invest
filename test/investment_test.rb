@@ -54,12 +54,12 @@ class InvestmentTest < Test::Unit::TestCase
     assert_equal 9_900, investment.returns
   end
 
-  def test_rate_of_return_over_time
+  def test_rate_of_return_with_regular_payments
     investment = Investment.new(100)
     investment.regular(100)
     investment.rate(5)
 
-    assert_equal 2_639.58, investment.returns(2)
+    assert_equal 2_636.88, investment.returns(2)
   end
 
   def test_regular_amount_at_different_intervals
@@ -91,24 +91,10 @@ class InvestmentTest < Test::Unit::TestCase
     investment.regular(700)
 
     assert_equal 12.25, investment.time_to_reach(200_000)
-    assert_equal 195_512.14, investment.returns(12)
+    assert_equal 191_497.24, investment.returns(12)
 
     assert_in_delta 20.8, investment.time_to_reach(500_000), 0.1
-    assert_equal 464_331.08, investment.returns(20)
-  end
-
-  def test_more_accurate_returns_are_less_than_returns
-    investment = Investment.new(10_000)
-
-    investment.rate(8)
-    investment.regular(1000)
-
-    returns = [
-      investment.returns(20),
-      investment.more_accurate_returns(20)
-    ]
-
-    assert_true returns[0] > returns[1]
+    assert_equal 447_667.43, investment.returns(20)
   end
 
   def test_returns_per_year
@@ -129,11 +115,11 @@ class InvestmentTest < Test::Unit::TestCase
     investment = Investment.new
 
     investment.regular(1_000, Frequency::MONTHLY, 6)
-    assert_equal 6_000, investment.more_accurate_returns(2)
+    assert_equal 6_000, investment.returns(2)
 
     investment.rate(5)
     investment.regular(1_000, Frequency::MONTHLY, 12)
-    assert_equal 12_941.25, investment.more_accurate_returns(2)
+    assert_equal 12_941.25, investment.returns(2)
   end
 
   def test_invested_with_limited_regular_payments
@@ -142,7 +128,7 @@ class InvestmentTest < Test::Unit::TestCase
     investment.rate(5)
     investment.regular(5_000, Frequency::YEARLY, 5)
 
-    assert_equal 37_024.37, investment.more_accurate_returns(10)
+    assert_equal 37_024.37, investment.returns(10)
     assert_equal 25_000, investment.invested(10)
 
     investment.regular(1_000, Frequency::MONTHLY, 6)
