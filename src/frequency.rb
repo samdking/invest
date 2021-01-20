@@ -5,7 +5,7 @@ class Frequency
 
   attr_reader :frequency, :amount
 
-  def initialize(amount = 0, frequency = 1, limit = nil)
+  def initialize(amount = 0, frequency = YEARLY, limit = nil)
       @amount = amount
       @frequency = frequency
       @limit = limit
