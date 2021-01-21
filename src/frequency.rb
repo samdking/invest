@@ -21,10 +21,6 @@ class Frequency
     (@limit ? [time, @limit].min : time) * @amount
   end
 
-  def yearly_total
-    @amount * @frequency
-  end
-
   def payments_for_year(year)
     return @frequency.times if @limit.nil?
 
