@@ -58,23 +58,18 @@ class InvestmentTest < Test::Unit::TestCase
     investment.regular(100)
     investment.rate(5)
 
+    assert_equal 1_337.5, investment.returns
     assert_equal 2_636.88, investment.returns(2)
   end
 
-  def test_regular_amount_at_different_intervals
-    investment = Investment.new
-
-    investment.regular(1000, Frequency::YEARLY)
-    assert_equal 2000, investment.returns(2)
-
-    investment.regular(1000, Frequency::QUARTERLY)
-    assert_equal 4000, investment.returns
-  end
-
-  def test_invested
+  def test_amount_invested_over_time
     investment = Investment.new(10_000)
     assert_equal 10_000, investment.invested
     assert_equal 10_000, investment.invested(5)
+  end
+
+  def test_amount_invested_over_time_with_regular_payments
+    investment = Investment.new(10_000)
 
     investment.regular(10_000, Frequency::YEARLY)
     assert_equal 50_000, investment.invested(4)
