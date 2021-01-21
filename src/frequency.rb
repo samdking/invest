@@ -22,8 +22,12 @@ class Frequency
   end
 
   def payments_for_year(year)
-    return @frequency.times if @limit.nil?
+    payments = frequency
 
-    [@limit - (year-1) * frequency, frequency].min.times
+    if @limit
+      payments = [@limit - (year-1) * frequency, payments].min
+    end
+
+    payments.times
   end
 end
