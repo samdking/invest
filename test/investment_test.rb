@@ -28,6 +28,13 @@ class InvestmentTest < Test::Unit::TestCase
     assert_equal 2_000, investment.returns
   end
 
+  def test_regular_withdrawals
+    investment = Investment.new(100_000)
+
+    regular = investment.regular(-1_000)
+    assert_equal 4_000, investment.returns(8)
+  end
+
   def test_returns_over_time
     investment = Investment.new
     investment.regular(500)
