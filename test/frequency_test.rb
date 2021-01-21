@@ -8,8 +8,8 @@ class FrequencyTest < Test::Unit::TestCase
     frequency = Frequency.new
 
     assert_equal 0, frequency.total(1)
-    assert_true, frequency.yearly?
-    assert_nil, frequency.limit
+    assert_true frequency.yearly?
+    assert_nil frequency.limit
   end
 
   def test_number_of_monthly_payments_for_year
@@ -46,6 +46,7 @@ class FrequencyTest < Test::Unit::TestCase
   def test_no_monthly_payments_in_second_year_when_limited_to_6
     frequency = Frequency.new(1_000, Frequency::MONTHLY, 6)
 
+    assert_equal 6, frequency.payments_for_year(1).size
     assert_equal 0, frequency.payments_for_year(2).size
   end
 

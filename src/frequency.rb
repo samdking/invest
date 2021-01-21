@@ -3,7 +3,7 @@ class Frequency
   QUARTERLY = 4
   YEARLY = 1
 
-  attr_reader :frequency, :amount
+  attr_reader :frequency, :amount, :limit
 
   def initialize(amount = 0, frequency = YEARLY, limit = nil)
       @amount = amount
