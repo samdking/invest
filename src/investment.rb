@@ -17,9 +17,7 @@ class Investment
 
   def returns(years = 1)
     (1..years).reduce(initial) do |starting, year|
-      add_interest(starting, @rate) + @regular.payments_for_year(year).map do |i|
-        add_interest(@regular.amount, @rate / @regular.frequency * (i + 1))
-      end.sum
+      returns_for_year(starting, year)
     end.round(2)
   end
 
@@ -37,10 +35,7 @@ class Investment
     years = 1
 
     loop do
-      running_total = add_interest(running_total, @rate) + @regular.payments_for_year(years).map do |i|
-        add_interest(@regular.amount, @rate / @regular.frequency * (i + 1))
-      end.sum
-
+      running_total = returns_for_year(running_total, years)
       return years if running_total >= total
       years += 1
     end
@@ -57,6 +52,12 @@ class Investment
   end
 
   private
+
+  def returns_for_year(starting, year)
+    add_interest(starting, @rate) + @regular.payments_for_year(year).sum do |i|
+      add_interest(@regular.amount, @rate / @regular.frequency * (i + 1))
+    end
+  end
 
   def add_interest(amount, rate)
     amount * (1 + rate / 100)
