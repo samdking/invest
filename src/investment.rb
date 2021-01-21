@@ -27,18 +27,16 @@ class Investment
 
   def time_to_reach(total)
     running_total = initial
-
-    return 0 if running_total >= total
+    years = 0
 
     raise InfiniteError if no_growth_possible?
 
-    years = 1
-
-    loop do
-      running_total = returns_for_year(running_total, years)
-      return years if running_total >= total
+    while running_total < total
       years += 1
+      running_total = returns_for_year(running_total, years)
     end
+
+    years
   end
 
   def invested(years = 1)
