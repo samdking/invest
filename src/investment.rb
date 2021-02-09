@@ -15,9 +15,9 @@ class Investment
     @regular = Frequency.new(amount, frequency, limit)
   end
 
-  def returns(years = 1)
+  def returns(years = 1, at_rate: @rate)
     (1..years).reduce(initial) do |starting, year|
-      returns_for_year(starting, year)
+      returns_for_year(starting, year, at_rate)
     end.round(2)
   end
 
@@ -33,7 +33,7 @@ class Investment
 
     while running_total < total
       years += 1
-      running_total = returns_for_year(running_total, years)
+      running_total = returns_for_year(running_total, years, @rate)
     end
 
     years
@@ -44,16 +44,38 @@ class Investment
   end
 
   def returns_per_year(years = 1)
-    (1..years).map do |year|
-      returns(year)
+    array = []
+
+    (1..years).reduce(initial) do |starting, year|
+      returns_for_year(starting, year, @rate).tap do |returns|
+        array << returns.round(2)
+      end
     end
+
+    array
+  end
+
+  def rate_of_return(returns, years = 1, guess: 10, max_guesses: 20)
+    rate = guess.to_f
+    total = returns(years)
+    iterations = 0
+
+    while total.round(1) != returns.round(1)
+      iterations += 1
+      rate -= ((total - returns).to_f / returns * 100)
+      total = returns(years, at_rate: rate)
+      #puts "#{total} (#{rate.round(2)}%)"
+      raise "Could not calculate rate of return" if iterations >= max_guesses
+    end
+
+    rate.round(1)
   end
 
   private
 
-  def returns_for_year(starting, year)
-    add_interest(starting, @rate) + @regular.payments_for_year(year).sum do |i|
-      add_interest(@regular.amount, @rate / @regular.frequency * (i + 1))
+  def returns_for_year(starting, year, rate)
+    add_interest(starting, rate) + @regular.payments_for_year(year).sum do |i|
+      add_interest(@regular.amount, rate / @regular.frequency * (i + 1))
     end
   end
 

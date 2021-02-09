@@ -142,4 +142,17 @@ class InvestmentTest < Test::Unit::TestCase
     investment.regular(1_000, Frequency::MONTHLY, 6)
     assert_equal 6_000, investment.invested
   end
+
+  def test_calculate_rate_of_return
+    investment = Investment.new
+
+    investment.regular(100)
+
+    assert_equal 1200, investment.returns
+    assert_equal 18.5, investment.rate_of_return(1320, 1)
+    assert_equal 7.7, investment.rate_of_return(1250, 1)
+
+    assert_equal 2400, investment.returns(2)
+    assert_equal 22.7, investment.rate_of_return(3000, 2)
+  end
 end
