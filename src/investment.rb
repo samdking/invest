@@ -74,9 +74,9 @@ class Investment
 
     while total.round(1) != returns.round(1)
       iterations += 1
-      diff = ((total - returns).to_f / returns * 100) / years
+      diff = ((returns - total).to_f / returns * 100) / years
       break if diff.abs < 0.005
-      rate -= diff
+      rate += diff
       total = returns(years, at_rate: rate)
       #puts "#{total} (#{rate.round(2)}%)"
       raise "Could not calculate rate of return" if iterations >= max_guesses
