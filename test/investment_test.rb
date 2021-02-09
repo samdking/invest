@@ -155,4 +155,11 @@ class InvestmentTest < Test::Unit::TestCase
     assert_equal 2400, investment.returns(2)
     assert_equal 22.7, investment.rate_of_return(3000, 2)
   end
+
+  def test_calculate_long_rate_of_return
+    investment = Investment.new
+    investment.regular(100)
+
+    assert_equal 6.1, investment.rate_of_return(7000, 5)
+  end
 end

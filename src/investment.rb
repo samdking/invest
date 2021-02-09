@@ -57,12 +57,12 @@ class Investment
 
   def rate_of_return(returns, years = 1, guess: 10, max_guesses: 20)
     rate = guess.to_f
-    total = returns(years)
+    total = returns(years, at_rate: rate)
     iterations = 0
 
     while total.round(1) != returns.round(1)
       iterations += 1
-      rate -= ((total - returns).to_f / returns * 100)
+      rate -= ((total - returns).to_f / returns * 100) / years
       total = returns(years, at_rate: rate)
       #puts "#{total} (#{rate.round(2)}%)"
       raise "Could not calculate rate of return" if iterations >= max_guesses
