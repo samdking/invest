@@ -43,7 +43,7 @@ class InvestmentTest < Test::Unit::TestCase
     assert_equal 24_000, investment.returns(4)
   end
 
-  def test_rate_of_return
+  def test_effect_of_rate_on_returns
     investment = Investment.new(500)
 
     investment.rate(5)
@@ -51,6 +51,13 @@ class InvestmentTest < Test::Unit::TestCase
 
     investment.rate(8)
     assert_equal 540, investment.returns
+  end
+
+  def test_returns_when_specifying_rate_as_argument
+    investment = Investment.new(500)
+
+    assert_equal 525, investment.returns(1, at_rate: 5)
+    assert_equal 540, investment.returns(1, at_rate: 8)
   end
 
   def test_negative_rate_of_return

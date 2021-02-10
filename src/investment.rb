@@ -17,7 +17,7 @@ class Investment
 
   def returns(years = 1, at_rate: @rate)
     (1..years).reduce(initial) do |starting, year|
-      returns_for_year(starting, year, at_rate)
+      returns_for_year(starting, year, at_rate.to_f)
     end.round(2)
   end
 
