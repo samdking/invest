@@ -19,9 +19,9 @@ class Investor
   def returns_per_year(years = 1)
     investment.returns_per_year(years).each_with_index.map do |returns, i|
       {
-        age: age + i + 1,
+        age: age ? age + i + 1 : nil,
         returns: returns
-      }
+      }.compact
     end
   end
 
