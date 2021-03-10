@@ -16,7 +16,7 @@ class Frequency
   def yearly?; @frequency == YEARLY; end
 
   def frequency_text
-    self.class.constants.find { |k| self.class.const_get(k) == frequency }.downcase.capitalize
+    self.class.constants.find { |k| self.class.const_get(k) == frequency }&.downcase&.capitalize
   end
 
   def total(years)
