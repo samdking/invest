@@ -3,6 +3,9 @@ require 'sinatra/reloader' if development?
 require_relative 'investor'
 
 post '/invest' do
+  response.headers['Access-Control-Allow-Origin'] = '*'
+  content_type :json
+
   if params[:dob_dd]
     dob = Date.new(params[:dob_yyyy].to_i, params[:dob_mm].to_i, params[:dob_dd].to_i)
   end
