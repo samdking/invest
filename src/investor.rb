@@ -1,8 +1,9 @@
 require_relative "investment"
 
 class Investor
-  def initialize(dob: nil)
+  def initialize(dob: nil, age: nil)
     @dob = dob
+    @age = age
   end
 
   def invest(initial_amount = 0)
@@ -30,6 +31,7 @@ class Investor
   end
 
   def age
+    return @age if @age
     return unless @dob
 
     today = Date.today

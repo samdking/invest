@@ -7,7 +7,11 @@ post '/invest' do
     dob = Date.new(params[:dob_yyyy].to_i, params[:dob_mm].to_i, params[:dob_dd].to_i)
   end
 
-  investor = Investor.new(dob: dob)
+  if params[:age]
+    age = params[:age].to_i
+  end
+
+  investor = Investor.new(dob: dob, age: age)
 
   investment = investor.invest((params[:initial] || 0).to_i)
 
