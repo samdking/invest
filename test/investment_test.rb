@@ -120,6 +120,16 @@ class InvestmentTest < Test::Unit::TestCase
     assert_equal investment.returns(18), returns_per_year.last
   end
 
+  def test_invested_per_year
+    investment = Investment.new(3_000)
+
+    investment.regular(100)
+
+    invested_per_year = investment.invested_per_year(18)
+
+    assert_equal 4_200, invested_per_year[0]
+  end
+
   def test_returns_with_limited_number_of_regular_payments
     investment = Investment.new
 

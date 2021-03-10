@@ -39,7 +39,7 @@ post '/invest' do
     investment: {
       age: investor.age,
       initial: investment.initial,
-      invested: investment.invested(years),
+      invested: investment.invested_per_year(years),
       regular: regular && {
         amount: regular.amount,
         frequency: regular.frequency_text,

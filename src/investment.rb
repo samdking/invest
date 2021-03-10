@@ -55,6 +55,18 @@ class Investment
     array
   end
 
+  def invested_per_year(years = 1)
+    array = []
+
+    (1..years).reduce(initial) do |tally, year|
+      invested_for_year(tally, year).tap do |invested|
+        array << invested.round(2)
+      end
+    end
+
+    array
+  end
+
   def rate_of_return(returns, years = 1, guess: 10, max_guesses: 20)
     rate = guess.to_f
     total = returns(years, at_rate: rate)
@@ -79,6 +91,10 @@ class Investment
     add_interest(starting, rate) + @regular.payments_for_year(year).sum do |i|
       add_interest(@regular.amount, rate / @regular.frequency * (i + 1))
     end
+  end
+
+  def invested_for_year(tally, year)
+    tally + @regular.payments_for_year(year).sum { @regular.amount }
   end
 
   def add_interest(amount, rate)
