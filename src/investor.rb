@@ -10,6 +10,10 @@ class Investor
     @investment = Investment.new(initial_amount)
   end
 
+  def invested(years = 1)
+    investment.invested(years)
+  end
+
   def returns(years = 1)
     {
       age: age + years,
