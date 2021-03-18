@@ -26,14 +26,16 @@ post '/invest' do
     )
   end
 
-  investment.rate((params[:rate] || 8).to_i)
+  rate = (params[:rate] || 8).to_i
 
-  if params[:time_to_reach]
-    years = investment.time_to_reach(params[:time_to_reach].to_i)
-  elsif params[:target_salary]
-    years = investment.time_to_reach(params[:target_salary].to_f * 25)
-  elsif params[:years]
+  investment.rate(rate)
+
+  if params[:years]
     years = params[:years].to_i
+  elsif params[:time_to_reach]
+    years = investment.time_to_reach(params[:time_to_reach].to_i)
+  elsif params[:target_salary] && params[:target_salary] != ''
+    years = investment.time_to_reach(params[:target_salary].to_f * 25)
   else
     years = 5
   end
@@ -42,6 +44,7 @@ post '/invest' do
     investment: {
       age: investor.age,
       initial: investment.initial,
+      rate: rate,
       invested: investment.invested_per_year(years),
       regular: regular && {
         amount: regular.amount,
@@ -50,6 +53,8 @@ post '/invest' do
       }.compact,
       time_to_reach: params[:time_to_reach] && years,
       returns: investor.returns_per_year(years),
+      total_returns: investor.returns(years)[:returns],
+      total_invested: investor.invested(years),
     }.compact
   }.to_json
 end
