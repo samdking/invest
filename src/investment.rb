@@ -3,16 +3,21 @@ require_relative "./frequency"
 class InfiniteError < StandardError; end
 
 class Investment
-  attr_reader :initial, :rate
+  attr_reader :initial
 
   def initialize(initial = 0)
     @initial = initial
     @regular = Frequency.new
     @rate = 0
+    @inflation_rate = 1
   end
 
-  def regular(amount, frequency = Frequency::MONTHLY, limit = nil)
-    @regular = Frequency.new(amount, frequency, limit)
+  def inflation(percentage)
+    @inflation_rate = 1 + percentage.to_f / 100
+  end
+
+  def regular(amount, frequency = Frequency::MONTHLY, limit: nil, increase_annually: true)
+    @regular = Frequency.new(amount, frequency, limit, increase_annually)
   end
 
   def returns(years = 1, at_rate: @rate)
@@ -40,7 +45,9 @@ class Investment
   end
 
   def invested(years = 1)
-    initial + @regular.total(years)
+    (1..years).reduce(initial) do |tally, year|
+      invested_for_year(tally, year)
+    end.round(2)
   end
 
   def returns_per_year(years = 1)
@@ -89,12 +96,16 @@ class Investment
 
   def returns_for_year(starting, year, rate)
     add_interest(starting, rate) + @regular.payments_for_year(year).sum do |i|
-      add_interest(@regular.amount, rate / @regular.frequency * (i + 1))
+      add_interest(@regular.amount * @inflation_rate ** year, rate / @regular.frequency * (i + 1))
     end
   end
 
   def invested_for_year(tally, year)
-    tally + @regular.payments_for_year(year).sum { @regular.amount }
+    inflation = @regular.increase_annually ? @inflation_rate : 1
+
+    tally + @regular.payments_for_year(year).sum do
+      @regular.amount * inflation ** (year-1)
+    end
   end
 
   def add_interest(amount, rate)

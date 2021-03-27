@@ -22,7 +22,8 @@ post '/invest' do
     regular = investment.regular(
       params[:regular_amount].to_i,
       params[:regular_frequency].to_i,
-      params[:regular_limit] ? params[:regular_limit].to_i : nil,
+      limit: params[:regular_limit] ? params[:regular_limit].to_i : nil,
+      increase_annually: params[:regular_inflation] != nil
     )
   end
 
@@ -30,12 +31,18 @@ post '/invest' do
 
   investment.rate(rate)
 
+  if params[:inflation]
+    investment.inflation(params[:inflation].to_f)
+  end
+
+  inflation = 1 + params[:inflation].to_f / 100
+
   if params[:years]
     years = params[:years].to_i
   elsif params[:time_to_reach]
     years = investment.time_to_reach(params[:time_to_reach].to_i)
   elsif params[:target_salary] && params[:target_salary] != ''
-    years = investment.time_to_reach(params[:target_salary].to_f * 25)
+    years = investment.time_to_reach(params[:target_salary].to_f * (inflation ** 25) * 25)
   else
     years = 5
   end
@@ -54,7 +61,9 @@ post '/invest' do
       time_to_reach: params[:time_to_reach] && years,
       returns: investor.returns_per_year(years),
       total_returns: investor.returns(years)[:returns],
-      total_invested: investor.invested(years),
+      total_invested: investor.invested(years).round(2),
+      annual_salary: (investor.returns(years)[:returns] * 0.04).round(2),
+      inflation: params[:inflation],
     }.compact
   }.to_json
 end

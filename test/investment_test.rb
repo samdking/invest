@@ -140,23 +140,21 @@ class InvestmentTest < Test::Unit::TestCase
   def test_returns_with_limited_number_of_regular_payments
     investment = Investment.new
 
-    investment.regular(1_000, Frequency::MONTHLY, 6)
+    investment.regular(1_000, Frequency::MONTHLY, limit: 6)
     assert_equal 6_000, investment.returns(2)
 
     investment.rate(5)
-    investment.regular(1_000, Frequency::MONTHLY, 12)
+    investment.regular(1_000, Frequency::MONTHLY, limit: 12)
     assert_equal 12_941.25, investment.returns(2)
   end
 
   def test_amount_invested_with_limited_regular_payments
     investment = Investment.new
 
-    investment.rate(5)
-
-    investment.regular(5_000, Frequency::YEARLY, 5)
+    investment.regular(5_000, Frequency::YEARLY, limit: 5)
     assert_equal 25_000, investment.invested(10)
 
-    investment.regular(1_000, Frequency::MONTHLY, 6)
+    investment.regular(1_000, Frequency::MONTHLY, limit: 6)
     assert_equal 6_000, investment.invested
   end
 
@@ -179,4 +177,42 @@ class InvestmentTest < Test::Unit::TestCase
 
     assert_equal 6.1, investment.rate_of_return(7000, 5)
   end
+
+  def test_amount_invested_with_inflation_increasing_annually
+    investment = Investment.new
+
+    investment.inflation(5)
+    investment.regular(500, Frequency::MONTHLY)
+
+    assert_equal 6_000, investment.invested(1) # 6000 invested
+    assert_equal 12_300, investment.invested(2) # 6300 invested
+    assert_equal 18_915, investment.invested(3) # 6615 invested
+    assert_equal 25_860.75, investment.invested(4) # 6,945.75 invested
+    assert_equal 33_153.79, investment.invested(5) # 7,293.0375 invested
+  end
+
+  def test_amount_invested_with_inflation_not_increasing_annually
+    investment = Investment.new
+
+    investment.inflation(5)
+    investment.regular(500, Frequency::MONTHLY, increase_annually: false)
+
+    assert_equal 6_000, investment.invested(1)
+    assert_equal 12_000, investment.invested(2)
+    assert_equal 18_000, investment.invested(3)
+    assert_equal 24_000, investment.invested(4)
+  end
+
+  def test_amount_invested_with_inflation_and_limited_regular_payments
+    investment = Investment.new
+
+    investment.inflation(5)
+
+    investment.regular(5_000, Frequency::YEARLY, limit: 5)
+    assert_equal 27_628.16, investment.invested(10)
+
+    investment.regular(1_000, Frequency::MONTHLY, limit: 18)
+    assert_equal 18_300, investment.invested(2)
+  end
+
 end

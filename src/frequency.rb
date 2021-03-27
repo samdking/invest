@@ -3,12 +3,13 @@ class Frequency
   QUARTERLY = 4
   YEARLY = 1
 
-  attr_reader :frequency, :amount, :limit
+  attr_reader :frequency, :amount, :limit, :increase_annually
 
-  def initialize(amount = 0, frequency = YEARLY, limit = nil)
-      @amount = amount
-      @frequency = frequency
-      @limit = limit
+  def initialize(amount = 0, frequency = YEARLY, limit = nil, increase_annually = false)
+    @amount = amount
+    @frequency = frequency
+    @limit = limit
+    @increase_annually = increase_annually
   end
 
   def monthly?; @frequency == MONTHLY; end
@@ -17,12 +18,6 @@ class Frequency
 
   def frequency_text
     self.class.constants.find { |k| self.class.const_get(k) == frequency }&.downcase&.capitalize
-  end
-
-  def total(years)
-    time = years * @frequency
-
-    (@limit ? [time, @limit].min : time) * @amount
   end
 
   def payments_for_year(year)
