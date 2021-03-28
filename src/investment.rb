@@ -36,9 +36,10 @@ class Investment
 
     raise InfiniteError if no_growth_possible?
 
-    while running_total < total
+    loop do
       years += 1
       running_total = returns_for_year(running_total, years, @rate)
+      break if running_total >= total * @inflation_rate ** (years-1)
     end
 
     years
@@ -96,7 +97,8 @@ class Investment
 
   def returns_for_year(starting, year, rate)
     add_interest(starting, rate) + @regular.payments_for_year(year).sum do |i|
-      add_interest(@regular.amount * @inflation_rate ** year, rate / @regular.frequency * (i + 1))
+      amount = @regular.amount * @inflation_rate ** (year-1)
+      add_interest(amount, rate / @regular.frequency * (i + 1))
     end
   end
 

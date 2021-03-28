@@ -35,14 +35,12 @@ post '/invest' do
     investment.inflation(params[:inflation].to_f)
   end
 
-  inflation = 1 + params[:inflation].to_f / 100
-
   if params[:years]
     years = params[:years].to_i
   elsif params[:time_to_reach]
     years = investment.time_to_reach(params[:time_to_reach].to_i)
   elsif params[:target_salary] && params[:target_salary] != ''
-    years = investment.time_to_reach(params[:target_salary].to_f * (inflation ** 25) * 25)
+    years = investment.time_to_reach(params[:target_salary].to_f * 25)
   else
     years = 5
   end
