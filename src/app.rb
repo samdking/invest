@@ -2,8 +2,17 @@ require 'sinatra'
 require 'sinatra/reloader' if development?
 require_relative 'investor'
 
+def cors_origin
+  case settings.environment
+  when :production
+    'https://retirable-fe.netlify.app'
+  when :development
+    '*'
+  end
+end
+
 post '/invest' do
-  response.headers['Access-Control-Allow-Origin'] = '*'
+  response.headers['Access-Control-Allow-Origin'] = cors_origin
   content_type :json
 
   if params[:dob_dd]
