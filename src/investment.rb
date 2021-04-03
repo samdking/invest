@@ -3,7 +3,7 @@ require_relative "./frequency"
 class InfiniteError < StandardError; end
 
 class Investment
-  attr_reader :initial
+  attr_reader :initial, :inflation_rate
 
   def initialize(initial = 0)
     @initial = initial
@@ -39,7 +39,7 @@ class Investment
     loop do
       years += 1
       running_total = returns_for_year(running_total, years, @rate)
-      break if running_total >= total * @inflation_rate ** (years-1)
+      break if running_total >= total * @inflation_rate ** years
     end
 
     years
@@ -89,15 +89,17 @@ class Investment
       #puts "#{total} (#{rate.round(2)}%)"
       raise "Could not calculate rate of return" if iterations >= max_guesses
     end
-
+app.rb
     rate.round(1)
   end
 
   private
 
   def returns_for_year(starting, year, rate)
+    inflation = @regular.increase_annually ? @inflation_rate : 1
+
     add_interest(starting, rate) + @regular.payments_for_year(year).sum do |i|
-      amount = @regular.amount * @inflation_rate ** (year-1)
+      amount = @regular.amount * inflation ** (year-1)
       add_interest(amount, rate / @regular.frequency * (i + 1))
     end
   end

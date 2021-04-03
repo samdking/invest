@@ -17,7 +17,8 @@ class Investor
   def returns(years = 1)
     {
       age: age + years,
-      returns: investment.returns(years)
+      returns: investment.returns(years),
+      adjusted_returns: investment.returns(years) / investment.inflation_rate ** years,
     }
   end
 
@@ -25,7 +26,8 @@ class Investor
     investment.returns_per_year(years).each_with_index.map do |returns, i|
       {
         age: age ? age + i + 1 : nil,
-        returns: returns
+        returns: returns,
+        adjusted_returns: returns / investment.inflation_rate ** years,
       }.compact
     end
   end

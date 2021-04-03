@@ -215,4 +215,13 @@ class InvestmentTest < Test::Unit::TestCase
     assert_equal 18_300, investment.invested(2)
   end
 
+  def test_inflation_on_returns
+    investment = Investment.new
+
+    investment.inflation(5)
+
+    investment.regular(1_000, Frequency::MONTHLY)
+
+    investment.returns(10)
+  end
 end

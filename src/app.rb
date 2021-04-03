@@ -32,7 +32,7 @@ post '/invest' do
       params[:regular_amount].to_i,
       params[:regular_frequency].to_i,
       limit: params[:regular_limit] ? params[:regular_limit].to_i : nil,
-      increase_annually: params[:regular_inflation] != nil
+      increase_annually: params[:regular_inflation] == '1'
     )
   end
 
@@ -70,6 +70,7 @@ post '/invest' do
       total_returns: investor.returns(years)[:returns],
       total_invested: investor.invested(years).round(2),
       annual_salary: (investor.returns(years)[:returns] * 0.04).round(2),
+      adjusted_annual_salary: (investor.returns(years)[:adjusted_returns] * 0.04).round(2),
       inflation: params[:inflation],
     }.compact
   }.to_json
