@@ -44,7 +44,9 @@ class InvestorTest < Test::Unit::TestCase
     investment.regular(1_000, Frequency::YEARLY)
 
     Timecop.freeze(Date.new(2020, 1, 1)) do
-      assert_equal({ age: 40, returns: 10_000 }, investor.returns(10))
+      result = investor.returns(10)
+      assert_equal(40, result[:age])
+      assert_equal(10_000, result[:returns])
     end
   end
 
@@ -54,10 +56,11 @@ class InvestorTest < Test::Unit::TestCase
     investment.regular(1_000, Frequency::YEARLY)
 
     Timecop.freeze(Date.new(2020, 1, 1)) do
-      assert_equal [
-        { age: 31, returns: 1_000 },
-        { age: 32, returns: 2_000 }
-      ], investor.returns_per_year(2)
+      result = investor.returns_per_year(2)
+      assert_equal(31, result[0][:age])
+      assert_equal(1_000, result[0][:returns])
+      assert_equal(32, result[1][:age])
+      assert_equal(2_000, result[1][:returns])
     end
   end
 

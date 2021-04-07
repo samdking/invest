@@ -89,7 +89,7 @@ class Investment
       #puts "#{total} (#{rate.round(2)}%)"
       raise "Could not calculate rate of return" if iterations >= max_guesses
     end
-app.rb
+
     rate.round(1)
   end
 
