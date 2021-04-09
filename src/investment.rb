@@ -93,6 +93,25 @@ class Investment
     rate.round(1)
   end
 
+  def required_to_retire_in(target, years, frequency: Frequency::MONTHLY, guess: 500, max_guesses: 20)
+    regular_amount = guess.to_f
+    regular(regular_amount, frequency)
+    total = returns(years)
+    iterations = 0
+
+    while total.round(1) != target.round(1)
+      iterations += 1
+      diff = ((target - total).to_f / target)
+      break if diff.abs < 0.005
+      regular_amount += diff * regular_amount
+      regular = regular(regular_amount.round(2), frequency)
+      total = returns(years)
+      raise "Could not calculate regular payments" if iterations >= max_guesses
+    end
+
+    regular
+  end
+
   private
 
   def returns_for_year(starting, year, rate)
