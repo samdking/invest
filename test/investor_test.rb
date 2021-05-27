@@ -41,7 +41,7 @@ class InvestorTest < Test::Unit::TestCase
   def test_investor_returns
     investor = Investor.new(dob: Date.new(1990, 1, 1))
     investment = investor.invest
-    investment.regular(1_000, Frequency::YEARLY)
+    investment.regular = Frequency.new(1_000, Frequency::YEARLY)
 
     Timecop.freeze(Date.new(2020, 1, 1)) do
       result = investor.returns(10)
@@ -53,7 +53,7 @@ class InvestorTest < Test::Unit::TestCase
   def test_investor_returns_per_year
     investor = Investor.new(dob: Date.new(1990, 1, 1))
     investment = investor.invest
-    investment.regular(1_000, Frequency::YEARLY)
+    investment.regular = Frequency.new(1_000, Frequency::YEARLY)
 
     Timecop.freeze(Date.new(2020, 1, 1)) do
       result = investor.returns_per_year(2)
@@ -68,8 +68,8 @@ class InvestorTest < Test::Unit::TestCase
     investor = Investor.new(dob: Date.new(1990, 1, 1))
 
     investment = investor.invest(10_000)
-    investment.rate(8)
-    investment.regular(500)
+    investment.rate = 8
+    investment.regular = Frequency.new(500)
 
     assert_equal 41, investor.age_at_target(100_000)
   end

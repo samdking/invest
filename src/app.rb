@@ -28,7 +28,7 @@ post '/invest' do
   investment = investor.invest((params[:initial] || 0).to_i)
 
   if params[:regular_amount]
-    regular = investment.regular(
+    regular = investment.regular = Frequency.new(
       params[:regular_amount].to_i,
       params[:regular_frequency].to_i,
       limit: params[:regular_limit] ? params[:regular_limit].to_i : nil,
@@ -38,10 +38,10 @@ post '/invest' do
 
   rate = (params[:rate] || 8).to_i
 
-  investment.rate(rate)
+  investment.rate = rate
 
   if params[:inflation]
-    investment.inflation(params[:inflation].to_f)
+    investment.inflation = params[:inflation].to_f
   end
 
   if params[:years]

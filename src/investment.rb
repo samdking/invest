@@ -12,12 +12,12 @@ class Investment
     @inflation_rate = 1
   end
 
-  def inflation(percentage)
+  def inflation=(percentage)
     @inflation_rate = 1 + percentage.to_f / 100
   end
 
-  def regular(amount, frequency = Frequency::MONTHLY, limit: nil, increase_annually: true)
-    @regular = Frequency.new(amount, frequency, limit, increase_annually)
+  def regular=(frequency)
+    @regular = frequency
   end
 
   def returns(years = 1, at_rate: @rate)
@@ -26,7 +26,7 @@ class Investment
     end.round(2)
   end
 
-  def rate(percentage)
+  def rate=(percentage)
     @rate = percentage.to_f
   end
 
