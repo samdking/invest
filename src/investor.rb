@@ -6,8 +6,19 @@ class Investor
     @age = age
   end
 
-  def invest(initial_amount = 0)
-    @investment = Investment.new(initial_amount)
+  def invest(initial_amount = 0, rate: nil, regular: nil)
+    @investment = Investment.new(initial_amount).tap do |investment|
+      investment.rate = rate if rate
+      investment.regular = regular if regular
+    end
+  end
+
+  def regular_amount
+    investment.regular_amount
+  end
+
+  def amend_regular(amount, frequency)
+    investment.regular = Frequency.new(amount, frequency)
   end
 
   def invested(years = 1)

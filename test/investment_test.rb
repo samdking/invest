@@ -225,28 +225,4 @@ class InvestmentTest < Test::Unit::TestCase
 
     investment.returns(10)
   end
-
-  def test_required_to_retire_in
-    investment = Investment.new
-
-    investment.rate(10)
-
-    regular = investment.required_to_retire_in(100_000, 10)
-
-    assert_kind_of Frequency, regular
-    assert regular.monthly?
-    assert_equal 495.98, regular.amount
-
-    regular = investment.required_to_retire_in(100_000, 5)
-
-    assert_kind_of Frequency, regular
-    assert regular.monthly?
-    assert_equal 1_294.32, regular.amount
-
-    regular = investment.required_to_retire_in(100_000, 5, frequency: Frequency::YEARLY)
-
-    assert_kind_of Frequency, regular
-    assert regular.yearly?
-    assert_equal 14_888.31, regular.amount
-  end
 end
