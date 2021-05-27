@@ -37,9 +37,7 @@ class TargetTest < Test::Unit::TestCase
   def test_regular_payment
     investor = Investor.new(age: 30)
 
-    investment = investor.invest(10_000)
-    investment.rate = 10
-    investment.regular = Frequency.new(500)
+    investor.invest(10_000, rate: 10, regular: Frequency.new(500))
 
     regular_payment = Target.new(investor, salary: 20_000, age: 50).regular_payment
 
