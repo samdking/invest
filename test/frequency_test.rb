@@ -29,6 +29,7 @@ class FrequencyTest < Test::Unit::TestCase
   def test_yearly_payments_for_year
     frequency = Frequency.new(100, Frequency::YEARLY, limit: 5)
 
+    assert frequency.yearly?
     assert_equal 1, frequency.payments_for_year(1).size
     assert_equal 1, frequency.payments_for_year(2).size
     assert_equal 1, frequency.payments_for_year(3).size
@@ -40,6 +41,7 @@ class FrequencyTest < Test::Unit::TestCase
   def test_quarterly_payments_with_limit
     frequency = Frequency.new(100, Frequency::QUARTERLY, limit: 3)
 
+    assert frequency.quarterly?
     assert_equal 3, frequency.payments_for_year(1).size
   end
 

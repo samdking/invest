@@ -15,16 +15,13 @@ class InvestmentTest < Test::Unit::TestCase
   def test_a_regular_amount
     investment = Investment.new
 
-    regular = investment.regular = Frequency.new(500)
-    assert_true regular.monthly?
+    investment.regular = Frequency.new(500)
     assert_equal 6_000, investment.returns
 
-    regular = investment.regular = Frequency.new(500, Frequency::YEARLY)
-    assert_true regular.yearly?
+    investment.regular = Frequency.new(500, Frequency::YEARLY)
     assert_equal 500, investment.returns
 
-    regular = investment.regular = Frequency.new(500, Frequency::QUARTERLY)
-    assert_true regular.quarterly?
+    investment.regular = Frequency.new(500, Frequency::QUARTERLY)
     assert_equal 2_000, investment.returns
   end
 
