@@ -1,12 +1,17 @@
 class Target
-  def initialize(investor, years: nil, age: nil, salary: nil)
+  def initialize(investor, years: nil, age: nil, salary: nil, inflation: 0)
     @investor = investor
     @years = years || age - investor.age
     @salary = salary
+    @inflation_rate = 1 + inflation.to_f / 100
+  end
+
+  def gross_salary
+    @salary * @inflation_rate ** @years
   end
 
   def positive?
-    actual_salary >= @salary
+    actual_salary >= gross_salary
   end
 
   def actual_salary
@@ -17,7 +22,7 @@ class Target
     regular_amount = @investor.regular_amount
     total = @investor.returns(@years)[:returns]
     iterations = 0
-    target = @salary * 25
+    target = gross_salary * 25
 
     while total.round(1) != target.round(1)
       iterations += 1

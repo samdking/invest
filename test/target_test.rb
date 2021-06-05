@@ -39,9 +39,22 @@ class TargetTest < Test::Unit::TestCase
 
     investor.invest(10_000, rate: 10, regular: Frequency.new(500))
 
-    regular_payment = Target.new(investor, salary: 20_000, age: 50).regular_payment
+    target = Target.new(investor, salary: 20_000, age: 50)
+    regular_payment = target.regular_payment
 
     assert_equal Frequency::MONTHLY, regular_payment.frequency
     assert_equal 596.59, regular_payment.amount
+  end
+
+  def test_regular_payment_with_inflation
+    investor = Investor.new(age: 30)
+
+    investor.invest(10_000, rate: 10, regular: Frequency.new(500), inflation: 3)
+
+    target = Target.new(investor, salary: 20_000, age: 50, inflation: 3)
+    regular_payment = target.regular_payment
+
+    assert_equal Frequency::MONTHLY, regular_payment.frequency
+    assert_equal 938.99, regular_payment.amount
   end
 end

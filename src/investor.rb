@@ -6,10 +6,11 @@ class Investor
     @age = age
   end
 
-  def invest(initial_amount = 0, rate: nil, regular: nil)
+  def invest(initial_amount = 0, rate: nil, regular: nil, inflation: nil)
     @investment = Investment.new(initial_amount).tap do |investment|
       investment.rate = rate if rate
       investment.regular = regular if regular
+      investment.inflation = inflation if inflation
     end
   end
 
