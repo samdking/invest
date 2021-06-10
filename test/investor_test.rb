@@ -74,7 +74,7 @@ class InvestorTest < Test::Unit::TestCase
       result = investor.returns_per_year(2)
       assert_equal(31, result[0][:age])
       assert_equal(1_000, result[0][:returns])
-      assert_equal(943, result[0][:adjusted_returns].round)
+      assert_equal(971, result[0][:adjusted_returns].round)
       assert_equal(32, result[1][:age])
       assert_equal(2_030, result[1][:returns])
       assert_equal(1_913, result[1][:adjusted_returns].round)

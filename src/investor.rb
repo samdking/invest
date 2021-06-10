@@ -39,7 +39,7 @@ class Investor
       {
         age: age ? age + i + 1 : nil,
         returns: returns,
-        adjusted_returns: returns / investment.inflation_rate ** i,
+        adjusted_returns: returns / investment.inflation_rate ** (i+1),
       }.compact
     end
   end
