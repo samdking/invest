@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'sinatra/reloader' if development?
 require_relative 'investor'
+require_relative 'target'
 
 def cors_origin
   case settings.environment
@@ -54,9 +55,19 @@ post '/invest' do
     years = 5
   end
 
+  if params[:target_age]
+    regular_target = Target.new(investor,
+      years: params[:years],
+      age: params[:target_age]&.to_i,
+      salary: params[:target_salary]&.to_f,
+      inflation: params[:inflation]&.to_f
+    ).regular_payment
+  end
+
   {
     investment: {
       age: investor.age,
+      target_age: params[:target_age],
       initial: investment.initial,
       rate: rate,
       invested: investment.invested_per_year(years),
@@ -72,6 +83,10 @@ post '/invest' do
       annual_salary: (investor.returns(years)[:returns] * 0.04).round(2),
       adjusted_annual_salary: (investor.returns(years)[:adjusted_returns] * 0.04).round(2),
       inflation: params[:inflation],
+      regular_target: regular_target && {
+        amount: regular_target.amount,
+        frequency: regular_target.frequency_text,
+      }.compact
     }.compact
   }.to_json
 end
