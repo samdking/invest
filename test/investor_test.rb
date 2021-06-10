@@ -64,6 +64,23 @@ class InvestorTest < Test::Unit::TestCase
     end
   end
 
+  def test_investor_adjusted_returns_with_inflation
+    investor = Investor.new(dob: Date.new(1990, 1, 1))
+    investment = investor.invest
+    investment.regular = Frequency.new(1_000, Frequency::YEARLY)
+    investment.inflation = 3
+
+    Timecop.freeze(Date.new(2020, 1, 1)) do
+      result = investor.returns_per_year(2)
+      assert_equal(31, result[0][:age])
+      assert_equal(1_000, result[0][:returns])
+      assert_equal(943, result[0][:adjusted_returns].round)
+      assert_equal(32, result[1][:age])
+      assert_equal(2_030, result[1][:returns])
+      assert_equal(1_913, result[1][:adjusted_returns].round)
+    end
+  end
+
   def test_age_at_target_returns
     investor = Investor.new(dob: Date.new(1990, 1, 1))
 

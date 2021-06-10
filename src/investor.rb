@@ -58,9 +58,9 @@ class Investor
     age
   end
 
-  private
+    def investment
+      @investment || raise("No investment available")
+    end
 
-  def investment
-    @investment || raise("No investment available")
-  end
+  private
 end

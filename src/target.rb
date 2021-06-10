@@ -20,7 +20,7 @@ class Target
 
   def regular_payment(frequency: Frequency::MONTHLY, max_guesses: 20)
     regular_amount = @investor.regular_amount
-    total = @investor.returns(@years)[:returns]
+    total = @investor.investment.returns(@years)
     iterations = 0
     target = gross_salary * 25
 
@@ -29,8 +29,9 @@ class Target
       diff = ((target - total).to_f / target)
       break if diff.abs < 0.005
       regular_amount += diff * regular_amount
-      regular = @investor.amend_regular(regular_amount.round(2), frequency)
-      total = @investor.returns(@years)[:returns]
+      investment = @investor.investment.dup
+      regular = investment.regular = Frequency.new(regular_amount.round(2), frequency)
+      total = investment.returns(@years)
       raise "Could not calculate regular payments" if iterations >= max_guesses
     end
 
