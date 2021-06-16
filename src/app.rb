@@ -6,7 +6,9 @@ require_relative 'target'
 def cors_origin
   case settings.environment
   when :production
-    'https://retirable-fe.netlify.app'
+    review_app = ENV['FE_APP_NAME'] ? "#{ENV['FE_APP_NAME']}--" : ''
+
+    "https://#{review_app}retirable-fe.netlify.app"
   when :development
     '*'
   end
