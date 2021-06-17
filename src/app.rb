@@ -1,11 +1,14 @@
 require 'sinatra'
 require 'sinatra/reloader' if development?
 require_relative 'investor'
+require_relative 'target'
 
 def cors_origin
   case settings.environment
   when :production
-    'https://retirable-fe.netlify.app'
+    review_app = ENV['FE_APP_NAME'] ? "#{ENV['FE_APP_NAME']}--" : ''
+
+    "https://#{review_app}retirable-fe.netlify.app"
   when :development
     '*'
   end
@@ -28,7 +31,7 @@ post '/invest' do
   investment = investor.invest((params[:initial] || 0).to_i)
 
   if params[:regular_amount]
-    regular = investment.regular(
+    regular = investment.regular = Frequency.new(
       params[:regular_amount].to_i,
       params[:regular_frequency].to_i,
       limit: params[:regular_limit] ? params[:regular_limit].to_i : nil,
@@ -38,10 +41,10 @@ post '/invest' do
 
   rate = (params[:rate] || 8).to_i
 
-  investment.rate(rate)
+  investment.rate = rate
 
   if params[:inflation]
-    investment.inflation(params[:inflation].to_f)
+    investment.inflation = params[:inflation].to_f
   end
 
   if params[:years]
@@ -54,9 +57,19 @@ post '/invest' do
     years = 5
   end
 
+  if params[:target_age]
+    regular_target = Target.new(investor,
+      years: params[:years],
+      age: params[:target_age]&.to_i,
+      salary: params[:target_salary]&.to_f,
+      inflation: params[:inflation]&.to_f
+    ).regular_payment
+  end
+
   {
     investment: {
       age: investor.age,
+      target_age: params[:target_age],
       initial: investment.initial,
       rate: rate,
       invested: investment.invested_per_year(years),
@@ -72,6 +85,10 @@ post '/invest' do
       annual_salary: (investor.returns(years)[:returns] * 0.04).round(2),
       adjusted_annual_salary: (investor.returns(years)[:adjusted_returns] * 0.04).round(2),
       inflation: params[:inflation],
+      regular_target: regular_target && {
+        amount: regular_target.amount,
+        frequency: regular_target.frequency_text,
+      }.compact
     }.compact
   }.to_json
 end

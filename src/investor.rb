@@ -6,8 +6,20 @@ class Investor
     @age = age
   end
 
-  def invest(initial_amount = 0)
-    @investment = Investment.new(initial_amount)
+  def invest(initial_amount = 0, rate: nil, regular: nil, inflation: nil)
+    @investment = Investment.new(initial_amount).tap do |investment|
+      investment.rate = rate if rate
+      investment.regular = regular if regular
+      investment.inflation = inflation if inflation
+    end
+  end
+
+  def regular_amount
+    investment.regular_amount
+  end
+
+  def amend_regular(amount, frequency)
+    investment.regular = Frequency.new(amount, frequency)
   end
 
   def invested(years = 1)
@@ -27,7 +39,7 @@ class Investor
       {
         age: age ? age + i + 1 : nil,
         returns: returns,
-        adjusted_returns: returns / investment.inflation_rate ** years,
+        adjusted_returns: returns / investment.inflation_rate ** (i+1),
       }.compact
     end
   end
@@ -46,9 +58,9 @@ class Investor
     age
   end
 
-  private
+    def investment
+      @investment || raise("No investment available")
+    end
 
-  def investment
-    @investment || raise("No investment available")
-  end
+  private
 end
