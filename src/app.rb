@@ -57,7 +57,7 @@ post '/invest' do
     years = 5
   end
 
-  if params[:target_age]
+  unless params[:target_age].nil? || params[:target_age].empty?
     regular_target = Target.new(investor,
       years: params[:years],
       age: params[:target_age]&.to_i,
