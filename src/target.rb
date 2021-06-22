@@ -32,7 +32,7 @@ class Target
       investment = @investor.investment.dup
       regular = investment.regular = Frequency.new(regular_amount.round(2), frequency)
       total = investment.returns(@years)
-      raise "Could not calculate regular payments" if iterations >= max_guesses
+      raise "Could not calculate regular payments for £#{@salary} over #{@years} years" if iterations >= max_guesses
     end
 
     regular
