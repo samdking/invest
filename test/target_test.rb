@@ -57,4 +57,50 @@ class TargetTest < Test::Unit::TestCase
     assert_equal Frequency::MONTHLY, regular_payment.frequency
     assert_equal 938.99, regular_payment.amount
   end
+
+  def test_time_to_reach_total
+    investor = Investor.new(age: 30)
+
+    investment = investor.invest(10_000, rate: 8, regular: Frequency.new(700))
+
+    target = Target.new(investor, salary: 8_000)
+
+    assert_equal 13, target.time_to_reach
+    assert_equal 215_581.02, investment.returns(13)
+
+    target = Target.new(investor, salary: 20_000)
+
+    assert_equal 22, target.time_to_reach
+    assert_equal 540_388.41, investment.returns(22)
+  end
+
+  def test_time_to_reach_total_with_inflation
+    investor = Investor.new(age: 30)
+
+    investment = investor.invest(10_000, rate: 8, inflation: 3, regular: Frequency.new(700))
+
+    target = Target.new(investor, inflation: 3, salary: 8_000)
+
+    assert_equal 15, target.time_to_reach
+    assert_equal 314_658.96, investment.returns(15)
+  end
+
+  def test_age_at_total
+    investor = Investor.new(dob: Date.new(1990, 1, 1))
+
+    investor.invest(10_000, rate: 8, regular: Frequency.new(500))
+
+    target = Target.new(investor, salary: 4_000)
+
+    assert_equal 41, target.age_at_total
+  end
+
+  def test_raises_error_when_growth_is_nil
+    investor = Investor.new
+    investor.invest(0)
+
+    assert_raise InfiniteError do
+      Target.new(investor, salary: 10_000).time_to_reach
+    end
+  end
 end

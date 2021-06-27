@@ -1,7 +1,5 @@
 require_relative "./frequency"
 
-class InfiniteError < StandardError; end
-
 class Investment
   attr_reader :initial, :inflation_rate
 
@@ -32,21 +30,6 @@ class Investment
 
   def rate=(percentage)
     @rate = percentage.to_f
-  end
-
-  def time_to_reach(total)
-    running_total = initial
-    years = 0
-
-    raise InfiniteError if no_growth_possible?
-
-    loop do
-      years += 1
-      running_total = returns_for_year(running_total, years, @rate)
-      break if running_total >= total * @inflation_rate ** years
-    end
-
-    years
   end
 
   def invested(years = 1)
@@ -97,6 +80,10 @@ class Investment
     rate.round(1)
   end
 
+  def no_growth_possible?
+    @regular.amount.zero? && (@rate <= 0 || initial <= 0)
+  end
+
   private
 
   def returns_for_year(starting, year, rate)
@@ -118,9 +105,5 @@ class Investment
 
   def add_interest(amount, rate)
     amount * (1 + rate / 100)
-  end
-
-  def no_growth_possible?
-    @regular.amount.zero? && (@rate <= 0 || initial <= 0)
   end
 end

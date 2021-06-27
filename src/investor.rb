@@ -18,10 +18,6 @@ class Investor
     investment.regular_amount
   end
 
-  def amend_regular(amount, frequency)
-    investment.regular = Frequency.new(amount, frequency)
-  end
-
   def invested(years = 1)
     investment.invested(years)
   end
@@ -44,10 +40,6 @@ class Investor
     end
   end
 
-  def age_at_target(target)
-    age + investment.time_to_reach(target)
-  end
-
   def age
     return @age if @age
     return unless @dob
@@ -58,9 +50,7 @@ class Investor
     age
   end
 
-    def investment
-      @investment || raise("No investment available")
-    end
-
-  private
+  def investment
+    @investment || raise("No investment available")
+  end
 end

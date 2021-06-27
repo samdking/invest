@@ -90,27 +90,6 @@ class InvestmentTest < Test::Unit::TestCase
     assert_equal 34_000, investment.invested(2)
   end
 
-  def test_time_to_reach_total
-    investment = Investment.new(10_000)
-
-    investment.rate = 8
-    investment.regular = Frequency.new(700)
-
-    assert_equal 13, investment.time_to_reach(200_000)
-    assert_equal 215_581.02, investment.returns(13)
-
-    assert_equal 22, investment.time_to_reach(500_000)
-    assert_equal 540_388.41, investment.returns(22)
-  end
-
-  def test_raises_error_when_growth_is_nil
-    investment = Investment.new
-
-    assert_raise InfiniteError do
-      investment.time_to_reach(100)
-    end
-  end
-
   def test_returns_per_year
     investment = Investment.new(3_000)
 
