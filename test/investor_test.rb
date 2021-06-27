@@ -81,14 +81,6 @@ class InvestorTest < Test::Unit::TestCase
     end
   end
 
-  def test_age_at_target_returns
-    investor = Investor.new(dob: Date.new(1990, 1, 1))
-
-    investor.invest(10_000, rate: 8, regular: Frequency.new(500))
-
-    assert_equal 41, investor.age_at_target(100_000)
-  end
-
   def test_returns_when_no_investment_raises_error
     investor = Investor.new
 
